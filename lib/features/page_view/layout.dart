@@ -1,8 +1,10 @@
 import 'package:e_commerce_app_task/core/constans/app_color.dart';
 import 'package:e_commerce_app_task/features/home/presentation/home_screen.dart';
 import 'package:e_commerce_app_task/features/wish_list/presentation/wish_list_screen.dart';
+import 'package:e_commerce_app_task/features/wish_list/presentation/cubit/wish_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
 
 class Layout extends StatefulWidget {
@@ -35,6 +37,10 @@ class _LayoutState extends State<Layout> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+
+    if (index == 0) {
+      context.read<WishListCubit>().getAllWishListData();
+    }
   }
 
   Future<bool> _onWillPop() async {
@@ -42,7 +48,6 @@ class _LayoutState extends State<Layout> {
       _onTabSelected(0);
       return false;
     }
-
     final shouldExit = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -54,9 +59,7 @@ class _LayoutState extends State<Layout> {
             child: const Text("No"),
           ),
           TextButton(
-            onPressed: () {
-              SystemNavigator.pop(); // الخروج من التطبيق
-            },
+            onPressed: () => SystemNavigator.pop(),
             child: const Text("Yes"),
           ),
         ],
@@ -72,7 +75,12 @@ class _LayoutState extends State<Layout> {
       child: Scaffold(
         body: PageView(
           controller: pageController,
-          onPageChanged: (index) => setState(() => _currentPage = index),
+          onPageChanged: (index) {
+            setState(() => _currentPage = index);
+            if (index == 0) {
+              context.read<WishListCubit>().getAllWishListData();
+            }
+          },
           children: const [HomeScreen(), WishListScreen()],
         ),
         bottomNavigationBar: SafeArea(
@@ -107,7 +115,6 @@ class _LayoutState extends State<Layout> {
 
   Widget _buildNavItem(IconData icon, String label, int index) {
     final bool isActive = _currentPage == index;
-
     return GestureDetector(
       onTap: () => _onTabSelected(index),
       child: AnimatedContainer(

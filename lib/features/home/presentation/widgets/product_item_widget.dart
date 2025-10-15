@@ -16,23 +16,30 @@ class ProductItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return BlocSelector<WishListCubit, WishListState, bool>(
-      selector: (state) {
-        return context.read<WishListCubit>().isFavourite(product.id);
-      },
-      builder: (context, isFavourite) {
-        return GestureDetector(
-          onTap: () {
-            context.push(Routes.detailsScreen, extra: product);
-          },
+    return BlocBuilder<WishListCubit, WishListState>(
+      builder: (context, state) {
+        final isFavourite = state is WishListSuccess
+            ? state.products.any((p) => p.id == product.id)
+            : false;
 
+        return GestureDetector(
+          onTap: () async {
+            final updated = await context.push<bool>(
+              Routes.detailsScreen,
+              extra: product,
+            );
+            if (!context.mounted) return;
+            if (updated == true) {
+              context.read<WishListCubit>().getAllWishListData();
+            }
+          },
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: kPrimaryColor.withValues(alpha: 0.5),
+                  color: kPrimaryColor.withOpacity(0.5),
                   blurRadius: 1,
                   spreadRadius: 2,
                   offset: const Offset(2, 4),

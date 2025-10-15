@@ -17,11 +17,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
+class _HomeScreenState extends State<HomeScreen> {
   String selectedCategory = "All Products";
-  @override
-  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -30,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final box = Hive.box<ProductEntity>(kHiveBoxWishlist);
 
     return BlocProvider(

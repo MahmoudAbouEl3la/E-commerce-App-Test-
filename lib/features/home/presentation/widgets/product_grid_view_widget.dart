@@ -20,7 +20,7 @@ class _ProductGridViewWidgetState extends State<ProductGridViewWidget> {
   late final ScrollController _scrollController;
   int page = 0;
   bool isLoading = false;
-  static const percentage = 75;
+  static const percentage = 70;
 
   @override
   void initState() {

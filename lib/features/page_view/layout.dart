@@ -1,11 +1,10 @@
-import 'package:e_commerce_app_task/core/constans/app_color.dart';
 import 'package:e_commerce_app_task/features/home/presentation/home_screen.dart';
+import 'package:e_commerce_app_task/features/page_view/bottom_nav_bar.dart';
 import 'package:e_commerce_app_task/features/wish_list/presentation/wish_list_screen.dart';
 import 'package:e_commerce_app_task/features/wish_list/presentation/cubit/wish_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax/iconsax.dart';
 
 class Layout extends StatefulWidget {
   const Layout({super.key});
@@ -83,72 +82,9 @@ class _LayoutState extends State<Layout> {
           },
           children: const [HomeScreen(), WishListScreen()],
         ),
-        bottomNavigationBar: SafeArea(
-          minimum: const EdgeInsets.only(bottom: 10),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14),
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.95),
-              borderRadius: BorderRadius.circular(22),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-              border: Border.all(color: Colors.grey.withOpacity(0.15)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(Iconsax.card, "Products", 0),
-                _buildNavItem(Iconsax.heart, "Wishlist", 1),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, int index) {
-    final bool isActive = _currentPage == index;
-    return GestureDetector(
-      onTap: () => _onTabSelected(index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          color: isActive ? kPrimaryColor.withOpacity(0.1) : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(
-          children: [
-            AnimatedScale(
-              scale: isActive ? 1.2 : 1.0,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              child: Icon(
-                icon,
-                color: isActive ? kPrimaryColor : Colors.grey,
-                size: 24,
-              ),
-            ),
-            if (isActive) ...[
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  color: kPrimaryColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ],
+        bottomNavigationBar: BottomNavBar(
+          currentPage: _currentPage,
+          onTabSelected: _onTabSelected,
         ),
       ),
     );
